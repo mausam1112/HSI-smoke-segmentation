@@ -1,0 +1,12 @@
+# ──────────────────────────────────────────────
+# Experiment 001 — Baseline run
+# Inherits all values from configs/base.yaml.
+# Only keys listed here override the base.
+# ──────────────────────────────────────────────
+
+experiment_name: "exp_001_baseline"
+
+training:
+  batch_size: 32
+  epochs: 2000
+  learning_rate: 3.0e-4

@@ -1,0 +1,37 @@
+# ──────────────────────────────────────────────
+# Experiment 002 — Mixture of Prototypes (MoP)
+# Paper: "Hyperspectral Smoke Segmentation via
+#         Mixture of Prototypes"
+#
+# Overrides base.yaml for the MoP model.
+# Only keys listed here replace the base defaults.
+# ──────────────────────────────────────────────
+
+experiment_name: "exp_002_mop"
+
+model:
+  name: "MixtureOfPrototypes"
+  in_channels: 25         # spectral bands C
+  num_classes: 1          # binary segmentation
+  n_groups: 5             # G — band groups (25 bands → 5 groups of 5)
+  band_dim: 32            # D — per-group feature dimension
+  n_prototypes: 8         # K — prototypes per group
+  embed_dim: 64           # decoder intermediate channels
+
+training:
+  batch_size: 8           # MoP is heavier; reduce if OOM
+  epochs: 200
+  learning_rate: 1.0e-3
+  loss: "mop_bce_dice"    # adds prototype diversity regularisation
+  alpha: 0.3              # BCE weight
+  lambda_div: 0.1         # diversity loss weight λ_div
+
+  lr_scheduler:
+    mode: "max"
+    factor: 0.5
+    patience: 5
+    min_lr: 1.0e-7
+
+  early_stopping:
+    patience: 15           # MoP benefits from longer patience
+    monitor: "val_mean_iou"
